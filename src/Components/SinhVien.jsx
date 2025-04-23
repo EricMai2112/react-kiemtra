@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import StudentItem from "./StudentItem";
+
 
 export default function SinhVien() {
     const [students, setStudents] = useState(() => {
@@ -139,76 +141,19 @@ const filteredStudents = students.filter((student) => {
             </tr>
           </thead>
           <tbody>
-            {filteredStudents.map((student) => (
-              <tr key={student.id} className="text-center">
-                {editingId === student.id ? (
-                  <>
-                    <td className="p-2 border">
-                      <input
-                        className="border p-1 rounded w-full"
-                        value={editingStudent.name}
-                        onChange={(e) =>
-                          setEditingStudent({ ...editingStudent, name: e.target.value })
-                        }
-                      />
-                    </td>
-                    <td className="p-2 border">
-                      <input
-                        className="border p-1 rounded w-full"
-                        value={editingStudent.class}
-                        onChange={(e) =>
-                          setEditingStudent({ ...editingStudent, class: e.target.value })
-                        }
-                      />
-                    </td>
-                    <td className="p-2 border">
-                      <input
-                        type="number"
-                        className="border p-1 rounded w-full"
-                        value={editingStudent.age}
-                        onChange={(e) =>
-                          setEditingStudent({ ...editingStudent, age: e.target.value })
-                        }
-                      />
-                    </td>
-                    <td className="p-2 border text-right">
-                      <button
-                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 mr-2"
-                        onClick={() => handleSave(student.id)}
-                      >
-                        Lưu
-                      </button>
-                      <button
-                        className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500"
-                        onClick={() => setEditingId(null)}
-                      >
-                        Huỷ
-                      </button>
-                    </td>
-                  </>
-                ) : (
-                  <>
-                    <td className="p-2 border">{student.name}</td>
-                    <td className="p-2 border">{student.class}</td>
-                    <td className="p-2 border">{student.age}</td>
-                    <td className="p-2 border text-right">
-                      <button
-                        onClick={() => handleEdit(student)}
-                        className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 mr-2"
-                      >
-                        Sửa
-                      </button>
-                      <button
-                        onClick={() => handleDelete(student.id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                      >
-                        Xoá
-                      </button>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
+          {filteredStudents.map((student) => (
+    <StudentItem
+      key={student.id}
+      student={student}
+      isEditing={editingId === student.id}
+      editingStudent={editingStudent}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+      onChangeEditingStudent={setEditingStudent}
+      onSave={handleSave}
+      onCancel={() => setEditingId(null)}
+    />
+  ))}
           </tbody>
         </table>
       ) : (

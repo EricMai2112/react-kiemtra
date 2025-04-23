@@ -12,6 +12,8 @@ export default function SinhVien() {
   const [editingStudent, setEditingStudent] = useState({ name: "", class: "", age: "" });
   const [searchTerm, setSearchTerm] = useState("");
 
+  
+
   const handleAddStudent = () => {
     const { name, class: studentClass, age } = newStudent;
     if (!name || !studentClass || !age) {
@@ -45,24 +47,47 @@ export default function SinhVien() {
     setEditingStudent({ name: "", class: "", age: "" });
   };
 
-  const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // thêm state chọn lớp
+const [selectedClass, setSelectedClass] = useState("all");
+
+// danh sách lớp duy nhất
+const uniqueClasses = Array.from(new Set(students.map((s) => s.class)));
+
+// lọc sinh viên theo tên và lớp
+const filteredStudents = students.filter((student) => {
+  const matchesName = student.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const matchesClass = selectedClass === "all" || student.class === selectedClass;
+  return matchesName && matchesClass;
+});
+
 
   return (
     <div className="bg-white rounded shadow-md p-6 max-w-4xl mx-auto mt-6">
       <h1 className="text-2xl font-bold mb-4 text-center">Danh sách sinh viên</h1>
 
       {/* Tìm kiếm */}
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Tìm theo tên..."
-          className="border p-2 rounded w-full"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+      {/* Tìm kiếm & Lọc lớp */}
+<div className="flex flex-col md:flex-row gap-4 mb-4">
+  <input
+    type="text"
+    placeholder="Tìm theo tên..."
+    className="border p-2 rounded w-full md:w-1/2"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+
+  <select
+    className="border p-2 rounded w-full md:w-1/2"
+    value={selectedClass}
+    onChange={(e) => setSelectedClass(e.target.value)}
+  >
+    <option value="all">Tất cả lớp</option>
+    {uniqueClasses.map((cls) => (
+      <option key={cls} value={cls}>{cls}</option>
+    ))}
+  </select>
+</div>
+
 
       {/* Form thêm sinh viên */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">

@@ -10,6 +10,7 @@ export default function SinhVien() {
   const [newStudent, setNewStudent] = useState({ name: "", class: "", age: "" });
   const [editingId, setEditingId] = useState(null);
   const [editingStudent, setEditingStudent] = useState({ name: "", class: "", age: "" });
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleAddStudent = () => {
     const { name, class: studentClass, age } = newStudent;
@@ -44,9 +45,24 @@ export default function SinhVien() {
     setEditingStudent({ name: "", class: "", age: "" });
   };
 
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="bg-white rounded shadow-md p-6 max-w-4xl mx-auto mt-6">
       <h1 className="text-2xl font-bold mb-4 text-center">Danh sách sinh viên</h1>
+
+      {/* Tìm kiếm */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Tìm theo tên..."
+          className="border p-2 rounded w-full"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
       {/* Form thêm sinh viên */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -80,7 +96,7 @@ export default function SinhVien() {
       </div>
 
       {/* Bảng sinh viên */}
-      {students.length > 0 ? (
+      {filteredStudents.length > 0 ? (
         <table className="w-full table-auto border border-gray-300">
           <thead className="bg-gray-200">
             <tr>
@@ -91,7 +107,7 @@ export default function SinhVien() {
             </tr>
           </thead>
           <tbody>
-            {students.map((student) => (
+            {filteredStudents.map((student) => (
               <tr key={student.id} className="text-center">
                 {editingId === student.id ? (
                   <>
@@ -164,7 +180,7 @@ export default function SinhVien() {
           </tbody>
         </table>
       ) : (
-        <p className="text-center text-gray-500 py-6">Không có sinh viên nào.</p>
+        <p className="text-center text-gray-500 py-6">Không tìm thấy sinh viên phù hợp.</p>
       )}
     </div>
   );

@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function SinhVien() {
-  const [students, setStudents] = useState([
-    { id: 1, name: "Nguyễn Văn A", class: "12A1", age: 18 },
-    { id: 2, name: "Trần Thị B", class: "12A2", age: 17 },
-    { id: 3, name: "Lê Văn C", class: "11B1", age: 16 },
-  ]);
+    const [students, setStudents] = useState(() => {
+        const saved = localStorage.getItem("students");
+        return saved
+          ? JSON.parse(saved)
+          : [
+              { id: 1, name: "Nguyễn Văn A", class: "12A1", age: 18 },
+              { id: 2, name: "Trần Thị B", class: "12A2", age: 17 },
+              { id: 3, name: "Lê Văn C", class: "11B1", age: 16 },
+            ];
+      });
+      useEffect(() => {
+        localStorage.setItem("students", JSON.stringify(students));
+      }, [students]);
+            
 
   const [newStudent, setNewStudent] = useState({ name: "", class: "", age: "" });
   const [editingId, setEditingId] = useState(null);
   const [editingStudent, setEditingStudent] = useState({ name: "", class: "", age: "" });
   const [searchTerm, setSearchTerm] = useState("");
-
-  
 
   const handleAddStudent = () => {
     const { name, class: studentClass, age } = newStudent;

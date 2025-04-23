@@ -71,94 +71,97 @@ const filteredStudents = students.filter((student) => {
 
 
   return (
-    <div className="bg-white rounded shadow-md p-6 max-w-4xl mx-auto mt-6">
-      <h1 className="text-2xl font-bold mb-4 text-center">Danh sách sinh viên</h1>
+    <div className="bg-white shadow-lg rounded-lg p-6 max-w-5xl mx-auto mt-8">
+  <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">📋 Danh sách sinh viên</h1>
 
-      {/* Tìm kiếm */}
-      {/* Tìm kiếm & Lọc lớp */}
-<div className="flex flex-col md:flex-row gap-4 mb-4">
-  <input
-    type="text"
-    placeholder="Tìm theo tên..."
-    className="border p-2 rounded w-full md:w-1/2"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
+  {/* Tìm kiếm & Lọc */}
+  <div className="flex flex-col md:flex-row gap-4 mb-6">
+    <input
+      type="text"
+      placeholder="🔍 Tìm theo tên..."
+      className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-1/2"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
 
-  <select
-    className="border p-2 rounded w-full md:w-1/2"
-    value={selectedClass}
-    onChange={(e) => setSelectedClass(e.target.value)}
-  >
-    <option value="all">Tất cả lớp</option>
-    {uniqueClasses.map((cls) => (
-      <option key={cls} value={cls}>{cls}</option>
-    ))}
-  </select>
+    <select
+      className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-1/2"
+      value={selectedClass}
+      onChange={(e) => setSelectedClass(e.target.value)}
+    >
+      <option value="all">📚 Tất cả lớp</option>
+      {uniqueClasses.map((cls) => (
+        <option key={cls} value={cls}>
+          {cls}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  {/* Form thêm sinh viên */}
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <input
+      type="text"
+      placeholder="👤 Họ tên"
+      className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      value={newStudent.name}
+      onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
+    />
+    <input
+      type="text"
+      placeholder="🏫 Lớp"
+      className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      value={newStudent.class}
+      onChange={(e) => setNewStudent({ ...newStudent, class: e.target.value })}
+    />
+    <input
+      type="number"
+      placeholder="🎂 Tuổi"
+      className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      value={newStudent.age}
+      onChange={(e) => setNewStudent({ ...newStudent, age: e.target.value })}
+    />
+    <button
+      onClick={handleAddStudent}
+      className="bg-blue-600 text-white rounded-md px-4 py-2 hover:bg-blue-700 transition"
+    >
+      ➕ Thêm sinh viên
+    </button>
+  </div>
+
+  {/* Bảng sinh viên */}
+  {filteredStudents.length > 0 ? (
+    <div className="overflow-x-auto">
+      <table className="w-full table-auto border border-gray-300 shadow-sm">
+        <thead className="bg-blue-100 text-blue-800">
+          <tr>
+            <th className="p-2 border">👤 Tên</th>
+            <th className="p-2 border">🏫 Lớp</th>
+            <th className="p-2 border">🎂 Tuổi</th>
+            <th className="p-2 border text-right">⚙️ Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredStudents.map((student) => (
+            <StudentItem
+              key={student.id}
+              student={student}
+              isEditing={editingId === student.id}
+              editingStudent={editingStudent}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onChangeEditingStudent={setEditingStudent}
+              onSave={handleSave}
+              onCancel={() => setEditingId(null)}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  ) : (
+    <p className="text-center text-gray-500 py-6">🚫 Không tìm thấy sinh viên phù hợp.</p>
+  )}
 </div>
 
-
-      {/* Form thêm sinh viên */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Họ tên"
-          className="border p-2 rounded"
-          value={newStudent.name}
-          onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Lớp"
-          className="border p-2 rounded"
-          value={newStudent.class}
-          onChange={(e) => setNewStudent({ ...newStudent, class: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="Tuổi"
-          className="border p-2 rounded"
-          value={newStudent.age}
-          onChange={(e) => setNewStudent({ ...newStudent, age: e.target.value })}
-        />
-        <button
-          onClick={handleAddStudent}
-          className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700"
-        >
-          Thêm sinh viên
-        </button>
-      </div>
-
-      {/* Bảng sinh viên */}
-      {filteredStudents.length > 0 ? (
-        <table className="w-full table-auto border border-gray-300">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="p-2 border">Tên</th>
-              <th className="p-2 border">Lớp</th>
-              <th className="p-2 border">Tuổi</th>
-              <th className="p-2 border text-right">Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-          {filteredStudents.map((student) => (
-    <StudentItem
-      key={student.id}
-      student={student}
-      isEditing={editingId === student.id}
-      editingStudent={editingStudent}
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-      onChangeEditingStudent={setEditingStudent}
-      onSave={handleSave}
-      onCancel={() => setEditingId(null)}
-    />
-  ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-center text-gray-500 py-6">Không tìm thấy sinh viên phù hợp.</p>
-      )}
-    </div>
   );
 }
